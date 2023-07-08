@@ -119,7 +119,7 @@ The **`file_storage.py`** file defines a FileStorage class with methods that fol
 The **`__init__.py`** file instantiates the FileStorage class as **`storage`** and calls the **`reload()`** method on that instance. This automatically reloads the serialized data during initialization.
 
 ## Tests
-All programs were thoroughly tested using the unittest module. The tests for the classes are located in the test_models folder.
+All programs were thoroughly tested using the unittest module. Tests for the classes can be located in the test_models folder.
 
 ## Authors
 
