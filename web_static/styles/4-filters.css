@@ -1,0 +1,32 @@
+/* styles/4-filters.css */
+
+/*
+ * Filters Styles
+ */
+
+/* Set styles for the filters section */
+.filters {
+	background-color: #ffffff;
+	height: 70px;
+	width: 100%;
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+}
+
+/* Set styles for the search button */
+.filters button {
+	background: #ff5a5f;
+	border-radius: 4px;
+	border: none;
+	color: #ffffff;
+	float: right;
+	height: 48px;
+	width: 20%;
+	font-size: 18px;
+	margin: 12px 30px;
+}
+
+/* Set hover styles for the search button */
+.filters button:hover {
+	background-color: rgba(255, 90, 95, 0.9);
+}

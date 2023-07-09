@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>AirBnB clone</title>
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="styles/4-common.css">
+		<link rel="stylesheet" href="styles/6-filters.css">
+		<link rel="stylesheet" href="styles/3-header.css">
+		<link rel="stylesheet" href="styles/3-footer.css">
+		<link rel="stylesheet" href="styles/8-places.css">
+		<link rel="icon" href="images/icon.png">
+	</head>
+	<body>
+		<header></header>
+		<div class="container">
+			<!-- Filters section -->
+			<section class="filters">
+				<!-- Locations filter -->
+				<div class="locations">
+					<h3>States</h3>
+					<h4>ie. Addis Ababa, Dire Dawa...</h4>
+					<!-- Popover for locations -->
+					<div class="popover">
+						<h2>Addis Ababa</h2>
+						<ul>
+							<li>Bole</li>
+							<li>piassa</li>
+							<li>Mexico</li>
+						</ul>
+						<h2>Dire Dawa</h2>
+						<ul>
+							<li>Konel</li>
+							<li>Ashewa</li>
+							<li>Kezira</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Amenities filter -->
+				<div class="amenities">
+					<h3>Amenities</h3>
+					<h4>ie. Internet, Kitchen...</h4>
+					<!-- Popover for amenities -->
+					<div class="popover">
+						<ul>
+							<li>Internet</li>
+							<li>Tv</li>
+							<li>Kitchen</li>
+							<li>Iron</li>
+							<li>Swimming pool</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Search button -->
+				<button>Search</button> 
+			</section>
+
+			<!-- Places section -->
+			<section class="places">
+				<h1>Places</h1>
+				<div class="listing">
+					<article>
+						<div class="list-motel">
+							<h2> Villa</h2>
+							<div class="price_by_night">
+								<p>$50</p>
+							</div>
+						</div>
+						<div class="information">
+							<!-- Maximum guests information -->
+							<div class="max_guest">
+								<img src="images/icon_group.png" alt="Group Icon">
+								<p>5 Guests</p>
+							</div>
+							<!-- Number of rooms information -->
+							<div class="number_rooms">
+								<img src="images/icon_bed.png" alt="Bed Icon">
+								<p>4 Rooms</p>
+							</div>
+							<!-- Number of bathrooms information -->
+							<div class="number_bathrooms">
+								<img src="images/icon_bath.png" alt="Bathroom Icon">
+								<p>3 Bathrooms</p>
+							</div>
+						</div>
+						<div class="user">
+							<!-- Owner information -->
+							<p><b>Owner</b>: Haile G/selasse</p>
+						</div>
+						<div class="description">
+							<!-- Description of the place -->
+							<p>Every booking includes free protection from Host cancellations, listing inaccuracies, and other issues like trouble checking in.</p>
+						</div>
+					</article>
+					<article>
+						<div class="list-motel">
+							<h2> Apartment</h2>
+							<div class="price_by_night">
+								<p>$80</p>
+							</div>
+						</div>
+						<div class="information">
+							<!-- Maximum guests information -->
+							<div class="max_guest">
+								<img src="images/icon_group.png" alt="Group Icon">
+								<p>3 Guests</p>
+							</div>
+							<!-- Number of rooms information -->
+							<div class="number_rooms">
+								<img src="images/icon_bed.png" alt="Bed Icon">
+								<p>2 Rooms</p>
+							</div>
+							<!-- Number of bathrooms information -->
+							<div class="number_bathrooms">
+								<img src="images/icon_bath.png" alt="Bathroom Icon">
+								<p>1 Bathroom</p>
+							</div>
+						</div>
+						<div class="user">
+							<!-- Owner information -->
+							<p><b>Owner</b>: Selam Tesfaye</p>
+						</div>
+						<div class="description">
+							<!-- Description of the place -->
+							<p>Enjoy a comfortable stay in this stylish apartment with modern amenities.</p>
+						</div>
+					</article>
+				</div>
+			</section>
+		</div>
+		<footer></footer>
+		<script src="scripts/8-places.js"></script>
+	</body>
+</html>

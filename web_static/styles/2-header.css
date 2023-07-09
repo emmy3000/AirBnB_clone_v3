@@ -1,0 +1,14 @@
+/*
+ * Header Styles
+ */
+
+/* Set styles for the header */
+header {
+	background-color: #f00;
+	height: 70px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	padding-left: 20px;
+	color: white;
+}

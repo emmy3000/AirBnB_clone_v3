@@ -1,0 +1,139 @@
+/* Styles for the filters section */
+.filters {
+	display: flex;
+	justify-content: space-between;
+}
+
+.filters .locations,
+.filters .amenities {
+	width: 30%;
+	margin-right: 20px;
+}
+
+.filters h3 {
+	margin: 0;
+}
+
+.filters h4 {
+	margin-top: 10px;
+	color: #888;
+}
+
+.filters .popover {
+	background-color: #f9f9f9;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 10px;
+	margin-top: 5px;
+}
+
+.filters .popover ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.filters .popover ul li {
+	margin: 5px 0;
+}
+
+.filters button {
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+/* Styles for the places section */
+.places {
+	margin-top: 20px;
+}
+
+.places h1 {
+	margin: 0;
+}
+
+.listing {
+	margin-top: 20px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+.listing article {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.list-motel h2 {
+	margin: 0;
+}
+
+.price-by-night {
+	background-color: #007bff;
+	color: #fff;
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.information {
+	display: flex;
+}
+
+.information div {
+	margin-right: 20px;
+}
+
+.user {
+	margin-top: 10px;
+}
+
+.user p {
+	margin: 0;
+}
+
+.description {
+	margin-top: 10px;
+}
+
+.amenities ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+}
+
+.amenities ul li {
+	margin-right: 10px;
+}
+
+/* Styles for the reviews section */
+.reviews {
+	margin-top: 20px;
+}
+
+.reviews h2 {
+	margin: 0;
+}
+
+.reviews ul {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+.reviews ul li {
+	margin-top: 10px;
+}
+
+.reviews ul li h3 {
+	margin: 0;
+}
+
+.reviews ul li p {
+	margin: 0;
+	color: #888;
+}

@@ -1,0 +1,12 @@
+/*
+ * Global Styles
+ */
+
+/* Set global styles for the body */
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	color: #484848;
+}

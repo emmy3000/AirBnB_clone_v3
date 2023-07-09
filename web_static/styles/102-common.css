@@ -1,0 +1,27 @@
+/*
+ * Global Styles
+ */
+
+/* Set global font and color */
+body {
+    color: #484848;
+    font-family: "Circular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* Set maximum width and center container */
+.container {
+    margin: 30px auto;
+    max-width: 1000px;
+}
+
+/* Prevent horizontal overflow */
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Make strong text bold */
+strong {
+    font-weight: bold;
+}

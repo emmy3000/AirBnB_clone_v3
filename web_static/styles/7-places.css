@@ -1,0 +1,31 @@
+/* Styles for the Places Section */
+.places {
+	margin-top: 30px;
+}
+
+/* Styles for the Places Title */
+.places h1 {
+	font-size: 30px;
+	font-weight: bold;
+	margin: 0;
+}
+
+/* Styles for the Place Listings */
+.places article {
+	width: 390px;
+	padding: 20px;
+	margin-bottom: 20px;
+	border: 1px solid #ff5a5f;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Styles for the Place Name */
+.places h2 {
+	font-size: 30px;
+	font-weight: bold;
+	margin: 0;
+	text-align: center;
+}
