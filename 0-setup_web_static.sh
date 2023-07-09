@@ -1,44 +1,31 @@
 #!/usr/bin/env bash
-# Script sets up a web server for deployment of web_static.
+##############################################################
+# Script name: 0-setup_web_static.sh
+# Description: Sets up a web server for web_static deployment.
+##############################################################
 
-apt-get update
-apt-get install -y nginx
+# Install Nginx if it is not already installed
+if ! command -v nginx &> /dev/null; then
+   sudo apt-get update
+   sudo apt-get -y install nginx
+fi
 
-mkdir -p /data/web_static/releases/test/
-ln -sf /data/web_static/releases/test/ /data/web_static/current
-mkdir -p /data/web_static/shared/
-echo "<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
-</html>" > /data/web_static/releases/test/index.html
+# Create necessary directories if they don't already exist
+sudo mkdir -p /data/web_static/{releases/test,shared}
 
-chgrp -R ubuntu /data/
-chown -R ubuntu /data/
+# Create a fake HTML file for testing
+sudo echo "Test Page" | sudo tee /data/web_static/releases/test/index.html
 
-printf %s "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    add_header X-Served-By $HOSTNAME;
-    root   /var/www/html;
-    index  index.html index.htm;
+# Create or recreate the symbolink link
+sudo rm -rf /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-    location /hbnb_static {
-        alias /data/web_static/current;
-        index index.html index.htm;
-    }
+# Grant ownership of the /data/ directory to ubuntu user and group
+sudo chown -R ubuntu /data/
 
-    location /redirect_me {
-        return 301 http://umohpyro.tech/;
-    }
+# Update Nginx configuration
+config_file="/etc/nginx/sites-available/default"
+sudo sed -i '/^server {/a \ \n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}' "$config_file"
 
-    error_page 404 /404.html;
-    location /404 {
-      root /var/www/html;
-      internal;
-    }
-}" > /etc/nginx/sites-available/default
-
-service nginx restart
+# Restart Nginx
+sudo service nginx restart
