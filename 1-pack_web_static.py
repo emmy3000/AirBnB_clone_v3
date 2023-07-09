@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """
+Script name: `1-pack_web_static.py`
 This script creates a compressed archive of the web_static folder.
 """
 
