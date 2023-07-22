@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Script name: 3-deploy_web_static.py
+Script name: 100-clean_web_static.py
 
 This script creates and distributes an archive to your web servers
 using the functions do_pack() and do_deploy().
