@@ -2,8 +2,8 @@
 """
 Script name: 100-clean_web_static.py
 
-This script creates and distributes an archive to your web servers
-using the functions do_pack() and do_deploy().
+This script deletes out-of-dated archives by
+utilizing the do_clean() function.
 """
 
 import os
