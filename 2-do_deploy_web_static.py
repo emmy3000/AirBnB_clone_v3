@@ -1,56 +1,63 @@
 #!/usr/bin/python3
 """
 Script name: `2-do_deploy_web_static.py`
-Fabric script for deploying web_static archives to web servers.
+
+This script distributes an archive to your web servers,
+using the function do_deploy.
 """
 
-import os
+import os.path
 from fabric.api import env, put, run
+from contextlib import contextmanager
+
+env.hosts = ["54.209.192.188", "54.89.30.164"]
 
 
-# Define web servers
-env.hosts = ['54.209.192.188', '54.89.30.164']
-env.user = 'root'
-env.key_filename = '/root/.ssh/id_rsa'
+@contextmanager
+def clean_remote_directory(path):
+    try:
+        yield
+    finally:
+        run("rm -rf {}".format(path))
 
 
 def do_deploy(archive_path):
     """
-    Distributes the web_static archive to the web servers.
+    Distributes an archive to your web servers.
 
-    Args:
-        archive_path (str): Path of the web_static archive.
+    Arguments:
+        archive_path (str): Path to the archive to be deployed.
 
     Returns:
-        bool: True if all operations are successful, False otherwise.
+        bool: True if all operations have been done correctly,
+        False otherwise.
     """
     if not os.path.exists(archive_path):
         return False
 
-    try:
-        # Upload the archive to /tmp/ directory on web servers
-        put(archive_path, "/tmp/")
+    file = os.path.basename(archive_path)
+    name = os.path.splitext(file)[0]
 
-        # Extract the archive to /data/web_static/releases/ directory
-        # on web servers
-        archive_filename = os.path.basename(archive_path)
-        archive_name_without_ext = os.path.splitext(archive_filename)[0]
-        releases_path = "/data/web_static/releases/"
-        run("mkdir -p {}{}".format(releases_path, archive_name_without_ext))
-        run("tar -xzf /tmp/{} -C {}{}"
-            .format(archive_filename, releases_path, archive_name_without_ext))
+    with clean_remote_directory("/tmp/{}".format(file)), \
+            clean_remote_directory("/data/web_static/releases/{}/"
+                                   .format(name)):
+        if put(archive_path, "/tmp/{}".format(file)).failed:
+            return False
 
-        # Delete the archive from /tmp/ directory on web servers
-        run("rm /tmp/{}".format(archive_filename))
+        if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
+               .format(file, name)).failed:
+            return False
 
-        # Delete the symbolic link /data/web_static/current on web servers
-        run("rm -rf /data/web_static/current")
+        if run("mv /data/web_static/releases/{}/web_static/* "
+               "/data/web_static/releases/{}/".format(name, name)).failed:
+            return False
 
-        # Create a new symbolic link /data/web_static/current on web servers
-        run("ln -s {}{} /data/web_static/current"
-            .format(releases_path, archive_name_without_ext))
-
-        return True
-
-    except Exception:
+    if run("rm /tmp/{}".format(file)).failed or \
+       run("rm -rf /data/web_static/releases/{}/web_static"
+           .format(name)).failed or \
+       run("rm -rf /data/web_static/current").failed or \
+       run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
+           .format(name)).failed:
         return False
+
+    return True
