@@ -2,7 +2,7 @@
 """
 Script name: 100-clean_web_static.py
 
-This script deletes out-of-dated archives by
+This script deletes out-dated archives by
 utilizing the do_clean() function.
 """
 
