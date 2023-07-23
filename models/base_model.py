@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Defines the BaseModel class."""
+"""The BaseModel class module"""
 
 from datetime import datetime
 from sqlalchemy import Column, DateTime, String
@@ -7,6 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from uuid import uuid4
 
 Base = declarative_base()
+
 
 class BaseModel:
     """BaseModel's class definition.
@@ -16,7 +17,7 @@ class BaseModel:
         created_at (sqlalchemy DateTime): datetime at creation.
         updated_at (sqlalchemy DateTime): datetime of last update.
     """
-    __tablename__ = 'base_model'  # You can choose a different table name if needed
+    __tablename__ = 'base_model'
 
     id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
