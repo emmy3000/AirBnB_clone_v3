@@ -10,7 +10,7 @@ Routes:
     /python/(<text>): display "Python " followed by the value of the variable
                         (replace underscore '_' symbol with a space)
     The default value of 'text' is "is cool"
-    /number/<n>: display "<n> is a number" only if 'n' is an integer.
+    /number/<n>: display "<n> is a number" only if 'n' is an integer
 
 Mandatory use of `strict_slashes=False` in route definition.
 """
