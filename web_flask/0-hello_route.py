@@ -7,7 +7,6 @@ Routes:
     /: display "Hello HBNB!"
     Mandatory use of `strict_slashes=False` in route definition.
 """
-
 from flask import Flask
 
 app = Flask(__name__)
