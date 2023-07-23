@@ -11,10 +11,12 @@ Routes:
                         (replace underscore '_' symbol with a space)
     The default value of 'text' is "is cool"
     /number/<n>: display "<n> is a number" only if 'n' is an integer.
+    /number_template/<n>: Displays a custom HTML page if the value is an
+    integer 89.
 
 Mandatory use of `strict_slashes=False` in route definition.
 """
-from flask import Flask, escape, render_template, abort
+from flask import Flask, escape, render_template
 
 app = Flask(__name__)
 
@@ -58,10 +60,18 @@ def python_is_cool(text):
 def is_number(n):
     """
     Displays "n is a number" only if 'n' is an integer.
-    Otherwise, displays error 404 Not Found 
+    Otherwise, it returns a 404 Not Found error.
     """
     if isinstance(n, int):
         return '{} is a number'.format(n)
+
+
+@app.route('/number_template/<int:n>', strict_slashes=False)
+def number_template(n):
+    """
+    Displays an custome HTNL page if value is integer 89.
+    """
+    return render_template('5-number.html', n=n)
 
 
 if __name__ == '__main__':
