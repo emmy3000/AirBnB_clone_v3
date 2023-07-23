@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Defines the HBNB console."""
+"""The HBNB console module"""
 
 import cmd
 from shlex import split
@@ -209,9 +209,8 @@ class HBNBCommand(cmd.Cmd):
         except ValueError:
             print("** value missing **")
 
-    def count(self, line):
-        """counts the number of instances of a class
-        """
+    def do_count(self, line):
+        """Counts the number of instances of a class."""
         counter = 0
         try:
             my_list = split(line, " ")
