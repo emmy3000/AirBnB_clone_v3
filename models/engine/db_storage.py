@@ -26,8 +26,10 @@ class DBStorage:
     Represents the database storage engine.
 
     Attributes:
-        __engine (sqlalchemy.Engine): SQLAlchemy engine for database connection.
-        __session (sqlalchemy.Session): SQLAlchemy session to interact with the database.
+        __engine (sqlalchemy.Engine): SQLAlchemy engine
+        for database connection.
+        __session (sqlalchemy.Session): SQLAlchemy session
+        to interact with the database.
     """
 
     __engine = None
@@ -36,8 +38,10 @@ class DBStorage:
     def __init__(self):
         """Initialize a new DBStorage instance.
 
-        The constructor creates a new database engine and sets up the session.
-        If the environment is set to 'test', it drops all tables and recreates them.
+        The constructor creates a new database engine
+        and sets up the session.
+        If the environment is set to 'test', it drops all tables
+        and recreates them.
         """
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
                                       format(getenv("HBNB_MYSQL_USER"),
@@ -52,11 +56,12 @@ class DBStorage:
         """Query objects from the database.
 
         Args:
-            cls (str or SQLAlchemy class, optional): The class name or class to query.
+            cls (str or SQLAlchemy class, optional):class to query.
                 Defaults to None, which retrieves all objects from all classes.
 
         Returns:
-            dict: A dictionary of objects with format '{ClassName}.{object_id}'.
+            dict: A dictionary of objects with format \
+                    '{ClassName}.{object_id}'.
         """
         if cls is None:
             objs = self.__session.query(State).all()
@@ -95,7 +100,8 @@ class DBStorage:
     def reload(self):
         """Create all tables in the database and create a new session."""
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
