@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-"""This is the city class"""
+"""The City class module"""
 
-import models
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from sqlalchemy import Column, String, ForeignKey
+from models.base_model import BaseModel
 
 
 class City(BaseModel, Base):
@@ -15,5 +15,5 @@ class City(BaseModel, Base):
     name = Column(String(128), nullable=False)
 
     def __init__(self, *args, **kwargs):
-        """initializes city's object instance"""
+        """Initializes city's object instance"""
         super().__init__(*args, **kwargs)
