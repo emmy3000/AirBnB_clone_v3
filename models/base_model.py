@@ -8,15 +8,16 @@ from uuid import uuid4
 
 Base = declarative_base()
 
-
 class BaseModel:
     """BaseModel's class definition.
 
     Attributes:
-    id (sqlalchemy String): BaseModel id.
-    created_at (sqlalchemy DateTime): datetime at creation.
-    updated_at (sqlalchemy DateTime): datetime of last update.
+        id (sqlalchemy String): BaseModel id.
+        created_at (sqlalchemy DateTime): datetime at creation.
+        updated_at (sqlalchemy DateTime): datetime of last update.
     """
+    __tablename__ = 'base_model'  # You can choose a different table name if needed
+
     id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
@@ -39,7 +40,7 @@ class BaseModel:
 
     def save(self):
         """Updates updated_at with the current datetime."""
-        from models import storage  # Import statement moved here
+        from models import storage
         self.updated_at = datetime.utcnow()
         storage.new(self)
         storage.save()
