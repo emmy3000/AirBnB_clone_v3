@@ -7,7 +7,6 @@ from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models.city import City
 
-
 class State(BaseModel, Base):
     """Represents State class for MySQL database.
 
@@ -22,6 +21,8 @@ class State(BaseModel, Base):
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
 
+    __table_args__ = {'mysql_charset': 'latin1'}
+
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
         def cities(self):
@@ -32,7 +33,6 @@ class State(BaseModel, Base):
                 if city.state_id == self.id
             ]
             return city_list
-
     else:
         cities = relationship("City", backref="state",
                               cascade="all, delete-orphan")
