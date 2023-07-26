@@ -12,10 +12,11 @@ class Amenity(Base):
 
     Attributes:
         __tablename__ (str): name of MySQL table for storing Amenities.
-        id (sqlalchemy Integer): primary key column.
+        id (sqlalchemy String): primary key column. Change to String(60).
         name (sqlalchemy String): amenity's name.
     """
 
     __tablename__ = "amenities"
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(String(60), primary_key=True, nullable=False)
     name = Column(String(128), nullable=False)
+    __table_args__ = {'mysql_default_charset': 'latin1'}
