@@ -10,9 +10,10 @@ class City(BaseModel, Base):
     """City class definition"""
 
     __tablename__ = 'cities'
-
     state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
     name = Column(String(128), nullable=False)
+
+    __table_args__ = {'mysql_charset': 'latin1'}
 
     def __init__(self, *args, **kwargs):
         """Initializes city's object instance"""
