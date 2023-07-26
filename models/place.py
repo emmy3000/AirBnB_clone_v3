@@ -4,9 +4,7 @@
 from os import getenv
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
-from models.amenity import Amenity
 from models.base_model import Base, BaseModel
-from models.review import Review
 
 association_table = Table(
     "place_amenity",
@@ -16,9 +14,10 @@ association_table = Table(
         primary_key=True, nullable=False
     ),
     Column(
-        "amenity_id", Integer, ForeignKey("amenities.id"),
+        "amenity_id", String(60), ForeignKey("amenities.id"),
         primary_key=True, nullable=False
-    )
+    ),
+    mysql_charset="latin1"
 )
 
 
@@ -41,9 +40,9 @@ class Place(BaseModel, Base):
         longitude (sqlalchemy Float): place's longitude.
         reviews (sqlalchemy relationship): Place-Review relationship.
         amenities (sqlalchemy relationship): Place-Amenity relationship.
-        amenity_ids (list): list of linked amenity ids.
     """
     __tablename__ = "places"
+    id = Column(String(60), primary_key=True, nullable=False)
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     name = Column(String(128), nullable=False)
@@ -61,6 +60,8 @@ class Place(BaseModel, Base):
         viewonly=False
     )
     amenity_ids = []
+
+    __table_args__ = {'mysql_charset': 'latin1'}
 
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
