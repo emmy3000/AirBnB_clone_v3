@@ -1,7 +1,5 @@
 # 0x04. AirBnB clone - Web framework
 
-![Static Server Architecture](https://ibb.co/0D6w5CP)
-
 ## General
 - What is a Web Framework?
 - How to build a web framework with Flask.
@@ -53,8 +51,9 @@ $ pip3 install Flask
 ## Project Structure
 The project is organized into the following directories and files:
 ```bash
-project_root/
-    ├── app.py
+web_flask/
+    ├── example_script.py
+    ├── __init__.py
     ├── static/
     │   ├── styles/
     │   │   ├── style.css
