@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """
 Script name: `2-do_deploy_web_static.py`
 
