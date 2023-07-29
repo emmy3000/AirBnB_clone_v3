@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """The User class module"""
 
-from models.base_model import Base
+from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 
-class User(Base):
+class User(BaseModel, Base):
     """Represents MySQL database for class User.
 
     Inherits from SQLAlchemy Base & links to MySQL table users.
@@ -31,3 +31,20 @@ class User(Base):
     reviews = relationship("Review", backref="user", cascade="delete")
 
     __table_args__ = {'mysql_charset': 'latin1'}
+
+    def save(self):
+        """Updates updated_at attribute and saves the instance"""
+        super().save()
+
+    def to_dict(self):
+        """Return a dictionary representation of the User object."""
+        user_dict = {
+            'id': self.id,
+            'email': self.email,
+            'password': self.password,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+        }
+        return user_dict
