@@ -54,7 +54,7 @@ class TestUser(unittest.TestCase):
 
     def test_is_subclass_User(self):
         """Test if User is a subclass of BaseModel"""
-        self.assertTrue(issubclass(self.user.__class__, BaseModel), True)
+        self.assertTrue(issubclass(self.user.__class__, BaseModel))
 
     def test_attribute_types_User(self):
         """Test the attribute types of User instance"""
@@ -66,7 +66,9 @@ class TestUser(unittest.TestCase):
     def test_save_User(self):
         """Test if the save method works"""
         self.user.save()
-        self.assertNotEqual(self.user.created_at, self.user.updated_at)
+        with open("file.json", "r") as file:
+            content = file.read()
+            self.assertIn("User." + self.user.id, content)
 
     def test_to_dict_User(self):
         """Test if the to_dict method works"""
