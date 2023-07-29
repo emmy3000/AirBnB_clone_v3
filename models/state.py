@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-"""The State Class module"""
+"""The State class module"""
 
-from os import getenv
-from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, ForeignKey
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+from os import getenv
 from models.city import City
+
 
 class State(BaseModel, Base):
     """Represents State class for MySQL database.
@@ -33,6 +34,13 @@ class State(BaseModel, Base):
                 if city.state_id == self.id
             ]
             return city_list
+
     else:
         cities = relationship("City", backref="state",
                               cascade="all, delete-orphan")
+
+    def to_dict(self):
+        """Return a dictionary representation of the State instance."""
+        state_dict = super().to_dict()
+        state_dict["name"] = self.name
+        return state_dict
