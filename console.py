@@ -4,7 +4,6 @@
 import cmd
 from shlex import split
 from models import storage
-from datetime import datetime
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -19,13 +18,13 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
     __classes = {
-        "BaseModel",
-        "User",
-        "State",
-        "City",
-        "Amenity",
-        "Place",
-        "Review"
+        "BaseModel": BaseModel,
+        "User": User,
+        "State": State,
+        "City": City,
+        "Amenity": Amenity,
+        "Place": Place,
+        "Review": Review
     }
 
     def emptyline(self):
@@ -57,24 +56,25 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             my_list = line.split(" ")
 
+            if my_list[0] not in self.__classes:
+                raise NameError()
+
             kwargs = {
                 key: eval(value) if value[0] != '"'
                 else value.strip('"').replace("_", " ")
                 for key, value in (x.split("=") for x in my_list[1:])
             }
 
-            if kwargs == {}:
-                obj = eval(my_list[0])()
-            else:
-                obj = eval(my_list[0])(**kwargs)
-                storage.new(obj)
-            print(obj.id)
+            obj = self.__classes[my_list[0]](**kwargs)
             obj.save()
+            print(obj.id)
 
         except SyntaxError:
             print("** class name missing **")
         except NameError:
             print("** class doesn't exist **")
+        except ValueError:
+            print("** attribute/value missing **")
 
     def do_show(self, line):
         """Prints the string representation of an instance.
@@ -148,16 +148,17 @@ class HBNBCommand(cmd.Cmd):
         Display string representations of all instances of a given class.
         If no class is specified, displays all instantiated objects.
         """
-        if not line:
-            objects = storage.all()
-            print([str(obj) for obj in objects.values()])
-            return
         try:
+            if not line:
+                objects = storage.all()
+                print([str(obj) for obj in objects.values()])
+                return
+
             args = line.split(" ")
             if args[0] not in self.__classes:
                 raise NameError()
 
-            objects = storage.all(eval(args[0]))
+            objects = storage.all(self.__classes[args[0]])
             print([str(obj) for obj in objects.values()])
 
         except NameError:
@@ -211,17 +212,20 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, line):
         """Counts the number of instances of a class."""
-        counter = 0
         try:
-            my_list = split(line, " ")
-            if my_list[0] not in self.__classes:
+            if not line:
+                raise SyntaxError()
+            args = line.split(" ")
+            if args[0] not in self.__classes:
                 raise NameError()
-            objects = storage.all()
-            for key in objects:
-                name = key.split('.')
-                if name[0] == my_list[0]:
-                    counter += 1
-            print(counter)
+
+            objects = storage.all(self.__classes[args[0]])
+            count = sum(1 for obj in objects.values()
+                        if type(obj) == self.__classes[args[0]])
+            print(count)
+
+        except SyntaxError:
+            print("** class name missing **")
         except NameError:
             print("** class doesn't exist **")
 
@@ -256,7 +260,7 @@ class HBNBCommand(cmd.Cmd):
             if my_list[1] == "all()":
                 self.do_all(my_list[0])
             elif my_list[1] == "count()":
-                self.count(my_list[0])
+                self.do_count(my_list[0])
             elif my_list[1][:4] == "show":
                 self.do_show(self.strip_clean(my_list))
             elif my_list[1][:7] == "destroy":
