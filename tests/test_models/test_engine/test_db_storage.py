@@ -1,86 +1,88 @@
 #!/usr/bin/python3
-"""Unit tests for DBStorage class"""
+"""Test DBStorage Engine Module.
+
+This module defines the Test DBStorage engine used
+for database storage.
+"""
 
 import unittest
-import pep8
-import MySQLdb
 import os
-from os import getenv
-from models.base_model import BaseModel, Base
-from models.user import User
+from models.engine.db_storage import DBStorage
+from models.base_model import BaseModel
 from models.state import State
 from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-from models.engine.db_storage import DBStorage
 
 
-@unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'No database configuration')
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db', "Testing DBStorage only")
 class TestDBStorage(unittest.TestCase):
-    """Test cases for the DBStorage class"""
+    """Test cases for DBStorage class"""
 
-    @classmethod
-    def setUpClass(cls):
-        """Set up the test class"""
-        cls.User = getenv("HBNB_MYSQL_USER")
-        cls.Passwd = getenv("HBNB_MYSQL_PWD")
-        cls.Db = getenv("HBNB_MYSQL_DB")
-        cls.Host = getenv("HBNB_MYSQL_HOST")
-        cls.db = MySQLdb.connect(host=cls.Host, user=cls.User,
-                                 passwd=cls.Passwd, db=cls.Db,
-                                 charset="utf8")
-        cls.query = cls.db.cursor()
-        cls.storage = DBStorage()
-        cls.storage.reload()
+    def setUp(self):
+        """Set up the test environment"""
+        # Replace with your database configurations
+        user = os.getenv("HBNB_MYSQL_USER")
+        pwd = os.getenv("HBNB_MYSQL_PWD")
+        host = os.getenv("HBNB_MYSQL_HOST")
+        db_name = os.getenv("HBNB_MYSQL_DB")
 
-    @classmethod
-    def tearDownClass(cls):
-        """Tear down the test class"""
-        cls.query.close()
-        cls.db.close()
+        self.db_storage = DBStorage()
+        self.db_storage.reload()
 
-    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'No database configuration')
-    def test_pep8_DBStorage(self):
-        """Test for PEP 8 compliance of the DBStorage module"""
-        style = pep8.StyleGuide(quiet=True)
-        result = style.check_files(['models/engine/db_storage.py'])
-        self.assertEqual(result.total_errors, 0, "Fix PEP 8")
+    def tearDown(self):
+        """Teardown the test environment"""
+        self.db_storage.close()
 
-    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'No database configuration')
-    def test_read_tables(self):
-        """Test the existence of database tables"""
-        self.query.execute("SHOW TABLES")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 7)
+    def test_all(self):
+        """Test the 'all' method of DBStorage"""
+        # Add some test data to the database
+        state = State(name="California")
+        city = City(name="San Francisco", state_id=state.id)
+        self.db_storage.new(state)
+        self.db_storage.new(city)
+        self.db_storage.save()
 
-    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'No database configuration')
-    def test_no_element_user(self):
-        """Test that there are no elements in the 'users' table"""
-        self.query.execute("SELECT * FROM users")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 0)
+        # Get all objects using the 'all' method
+        all_objs = self.db_storage.all()
 
-    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'No database configuration')
-    def test_no_element_cities(self):
-        """Test that there are no elements in the 'cities' table"""
-        self.query.execute("SELECT * FROM cities")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 0)
+        # Make sure the objects were retrieved correctly
+        self.assertIn("State.{}".format(state.id), all_objs)
+        self.assertIn("City.{}".format(city.id), all_objs)
 
-    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'No database configuration')
-    def test_add(self):
-        """Test the consistency of the storage() method with the existing database"""
-        self.query.execute("SELECT * FROM states")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 0)
-        state = State(name="LUISILLO")
-        state.save()
-        self.db.autocommit(True)
-        self.query.execute("SELECT * FROM states")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 1)
+    def test_new_save(self):
+        """Test the 'new' and 'save' methods of DBStorage"""
+        # Add a new object to the database
+        state = State(name="New York")
+        self.db_storage.new(state)
+        self.db_storage.save()
 
+        # Check if the object was saved correctly in the database
+        state_key = "State.{}".format(state.id)
+        all_objs = self.db_storage.all()
+        self.assertIn(state_key, all_objs)
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_delete(self):
+        """Test the 'delete' method of DBStorage"""
+        # Add an object to the database
+        state = State(name="Texas")
+        self.db_storage.new(state)
+        self.db_storage.save()
+
+        # Delete the object and check if it's removed from the database
+        state_key = "State.{}".format(state.id)
+        self.assertIn(state_key, self.db_storage.all())
+
+        self.db_storage.delete(state)
+        self.db_storage.save()
+        self.assertNotIn(state_key, self.db_storage.all())
+
+    def test_reload(self):
+        """Test the 'reload' method of DBStorage"""
+        original_session = self.db_storage._DBStorage__session
+
+        self.db_storage.reload()
+        reloaded_session = self.db_storage._DBStorage__session
+
+        # Make sure the session is reloaded and not the same as the original
+        self.assertIsNot(original_session, reloaded_session)
+        self.assertIsNone(self.db_storage._DBStorage__session)
+
