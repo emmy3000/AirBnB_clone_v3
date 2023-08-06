@@ -1,20 +1,22 @@
 #!/usr/bin/python3
-"""The Amenity class module"""
+"""
+The Amenity class module.
+"""
 
 from datetime import datetime
-from models.base_model import Base, BaseModel
+from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer
 
 
 class Amenity(BaseModel, Base):
-    """Represents Amenity class for MySQL database.
+    """Represents Amenity class for the MySQL database.
 
-    Inherits from SQLAlchemy Base & links to MySQL amenities table.
+    Inherits from SQLAlchemy Base and links to the 'amenities' table.
 
     Attributes:
-        __tablename__ (str): name of MySQL table for storing Amenities.
-        id (sqlalchemy String): primary key column. Change to String(60).
-        name (sqlalchemy String): amenity's name.
+        __tablename__ (str): Name of the MySQL table for storing Amenities.
+        id (str): Primary key column, changed to String(60).
+        name (str): Amenity's name.
     """
 
     __tablename__ = "amenities"
@@ -25,7 +27,7 @@ class Amenity(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initialize Amenity object.
 
-        Call parent's (BaseModel's) __init__ to apply BaseModel behavior.
+        Calls parent's (BaseModel's) __init__ to apply BaseModel behavior.
         """
         super().__init__(*args, **kwargs)
 
