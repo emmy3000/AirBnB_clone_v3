@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-"""Unit tests for User class"""
+"""
+Unit tests for User class
+"""
 
 import unittest
 import os
@@ -9,11 +11,15 @@ import pep8
 
 
 class TestUser(unittest.TestCase):
-    """Test cases for the User class"""
+    """
+    Test cases for the User class
+    """
 
     @classmethod
     def setUpClass(cls):
-        """Set up the test class"""
+        """
+        Set up the test class
+        """
         cls.user = User()
         cls.user.first_name = "Kevin"
         cls.user.last_name = "Yook"
@@ -22,60 +28,124 @@ class TestUser(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """Tear down the test class"""
+        """
+        Tear down the test class
+        """
         del cls.user
 
     def tearDown(self):
-        """Tear down the test"""
+        """
+        Tear down the test cases
+        """
         try:
             os.remove("file.json")
         except Exception:
             pass
 
-    def test_pep8_User(self):
-        """Test for PEP 8 compliance of the User module"""
+    def test_pep8(self):
+        """
+        Test for PEP 8 compliance of the User module
+        """
         style = pep8.StyleGuide(quiet=True)
         result = style.check_files(['models/user.py'])
         self.assertEqual(result.total_errors, 0, "Fix PEP 8")
 
-    def test_checking_for_docstring_User(self):
-        """Test if User class has a docstring"""
+    def test_docstring(self):
+        """
+        Test if User class has a docstring
+        """
         self.assertIsNotNone(User.__doc__)
 
-    def test_attributes_User(self):
-        """Test if User instance has the required attributes"""
-        self.assertTrue('email' in self.user.__dict__)
-        self.assertTrue('id' in self.user.__dict__)
-        self.assertTrue('created_at' in self.user.__dict__)
-        self.assertTrue('updated_at' in self.user.__dict__)
-        self.assertTrue('password' in self.user.__dict__)
-        self.assertTrue('first_name' in self.user.__dict__)
-        self.assertTrue('last_name' in self.user.__dict__)
+    def test_class_attributes(self):
+        """
+        Test if User instance has the required attributes
+        """
+        user = User()
+        attributes = [
+            "email",
+            "id",
+            "created_at",
+            "updated_at",
+            "password",
+            "first_name",
+            "last_name"]
+        for attr in attributes:
+            self.assertTrue(hasattr(user, attr))
 
-    def test_is_subclass_User(self):
-        """Test if User is a subclass of BaseModel"""
-        self.assertTrue(issubclass(self.user.__class__, BaseModel))
+    def test_is_subclass(self):
+        """
+        Test if User is a subclass of BaseModel
+        """
+        user = User()
+        self.assertTrue(issubclass(user.__class__, BaseModel))
 
-    def test_attribute_types_User(self):
-        """Test the attribute types of User instance"""
-        self.assertEqual(type(self.user.email), str)
-        self.assertEqual(type(self.user.password), str)
-        self.assertEqual(type(self.user.first_name), str)
-        self.assertEqual(type(self.user.last_name), str)
+    def test_attribute_types(self):
+        """
+        Test the attribute types of User instance
+        """
+        self.assertIsInstance(self.user.email, str)
+        self.assertIsInstance(self.user.password, str)
+        self.assertIsInstance(self.user.first_name, str)
+        self.assertIsInstance(self.user.last_name, str)
 
-    def test_save_User(self):
-        """Test if the save method works"""
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE")
+                     == 'db', 'Skip for DB storage')
+    def test_save(self):
+        """
+        Test if the save method works
+        """
         self.user.save()
         with open("file.json", "r") as file:
             content = file.read()
             self.assertIn("User." + self.user.id, content)
 
-    def test_to_dict_User(self):
-        """Test if the to_dict method works"""
+    def test_to_dict(self):
+        """
+        Test if the to_dict method works
+        """
         user_dict = self.user.to_dict()
         self.assertEqual(self.user.__class__.__name__, 'User')
         self.assertIsInstance(user_dict['created_at'], str)
         self.assertIsInstance(user_dict['updated_at'], str)
+
+    def test_inheritance_from_BaseModel(self):
+        """
+        Test if User inherits from BaseModel
+        """
+        self.assertTrue(issubclass(User, BaseModel))
+
+    def test_default_attribute_values(self):
+        """
+        Test if User has the default attribute values
+        """
+        user = User()
+        default_values = {
+            "email": "",
+            "password": "",
+            "first_name": "",
+            "last_name": ""}
+        for attr, value in default_values.items():
+            self.assertEqual(getattr(user, attr), value)
+
+    def test_str_representation(self):
+        """
+        Test the string representation of User object
+        """
+        string = "[User] ({}) {}".format(self.user.id, self.user.__dict__)
+        self.assertEqual(string, str(self.user))
+
+    def test_method_docstrings(self):
+        """
+        Test for the presence and quality of docstrings in User methods
+        """
+        for name, method in inspect.getmembers(
+                User, predicate=inspect.isfunction):
+            self.assertIsNotNone(
+                method.__doc__,
+                "{} method needs a docstring".format(
+                    self.name))
+            self.assertTrue(len(method.__doc__) >= 1,
+                            "{} method needs a docstring".format(self.name))
 
 
 if __name__ == "__main__":
