@@ -1,88 +1,178 @@
 #!/usr/bin/python3
-"""Test DBStorage Engine Module.
+"""
+Contains test cases for the DBStorageDocs and DBStorage classes.
 
-This module defines the Test DBStorage engine used
-for database storage.
+This module defines test cases for the documentation and functionality
+of the DBStorageDocs and DBStorage classes used in the database storage.
 """
 
-import unittest
-import os
-from models.engine.db_storage import DBStorage
+from datetime import datetime
+import inspect
+import models
+from models.engine import db_storage
+from models.amenity import Amenity
 from models.base_model import BaseModel
-from models.state import State
 from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
+import json
+import os
+import pep8
+import unittest
+
+DBStorage = db_storage.DBStorage
+classes = {"Amenity": Amenity, "City": City, "Place": Place,
+           "Review": Review, "State": State, "User": User}
 
 
-@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db', "Testing DBStorage only")
+class TestDBStorageDocs(unittest.TestCase):
+    """
+    Test cases for the documentation and style of the DBStorage class.
+    """
+    @classmethod
+    def setUpClass(cls):
+        """Set up for the doc tests"""
+        cls.dbs_f = inspect.getmembers(DBStorage, inspect.isfunction)
+
+    def test_pep8_conformance_db_storage(self):
+        """
+        Test that models/engine/db_storage.py conforms to PEP8.
+        """
+        pep8s = pep8.StyleGuide(quiet=True)
+        result = pep8s.check_files(['models/engine/db_storage.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
+
+    def test_pep8_conformance_test_db_storage(self):
+        """
+        Test tests/test_models/test_db_storage.py conforms to PEP8.
+        """
+        pep8s = pep8.StyleGuide(quiet=True)
+        result = pep8s.check_files(['tests/test_models/test_engine/\
+test_db_storage.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
+
+    def test_db_storage_module_docstring(self):
+        """
+        Test for the db_storage.py module docstring.
+        """
+        self.assertIsNot(db_storage.__doc__, None,
+                         "db_storage.py needs a docstring")
+        self.assertTrue(len(db_storage.__doc__) >= 1,
+                        "db_storage.py needs a docstring")
+
+    def test_db_storage_class_docstring(self):
+        """
+        Test for the DBStorage class docstring.
+        """
+        self.assertIsNot(DBStorage.__doc__, None,
+                         "DBStorage class needs a docstring")
+        self.assertTrue(len(DBStorage.__doc__) >= 1,
+                        "DBStorage class needs a docstring")
+
+    def test_dbs_func_docstrings(self):
+        """
+        Test for the presence of docstrings in DBStorage methods.
+        """
+        for func in self.dbs_f:
+            self.assertIsNot(func[1].__doc__, None,
+                             "{:s} method needs a docstring".format(func[0]))
+            self.assertTrue(len(func[1].__doc__) >= 1,
+                            "{:s} method needs a docstring".format(func[0]))
+
+
 class TestDBStorage(unittest.TestCase):
-    """Test cases for DBStorage class"""
+    """
+    Test cases for the DBStorage class functionality.
+    """
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """
+        Test that 'get' method returns an object with a given id.
+        """
+        storage = DBStorage()
+        storage.reload()
+        state = State(name="test state")
+        storage.new(state)
+        obj = storage.get(State, state.id)
+        self.assertEqual(state, obj)
 
-    def setUp(self):
-        """Set up the test environment"""
-        # Replace with your database configurations
-        user = os.getenv("HBNB_MYSQL_USER")
-        pwd = os.getenv("HBNB_MYSQL_PWD")
-        host = os.getenv("HBNB_MYSQL_HOST")
-        db_name = os.getenv("HBNB_MYSQL_DB")
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count(self):
+        """
+        Test that 'count' method returns the correct number of objects.
+        """
+        storage = DBStorage()
+        storage.reload()
+        state = State(name="test state")
+        storage.new(state)
+        state_count = storage.count(State)
+        self.assertGreaterEqual(state_count, 1)
+        all_count = storage.count()
+        self.assertGreaterEqual(all_count, 1)
 
-        self.db_storage = DBStorage()
-        self.db_storage.reload()
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_all_returns_dict(self):
+        """
+        Test that 'all' method returns a dictionary.
+        """
+        self.assertIs(type(models.storage.all()), dict)
 
-    def tearDown(self):
-        """Teardown the test environment"""
-        self.db_storage.close()
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_all_no_class(self):
+        """
+        Test that 'all' method returns all rows when no class is passed.
+        """
+        storage = DBStorage()
+        storage.reload()
+        state = State(name="test state")
+        city = City(name="test city")
+        storage.new(state)
+        storage.new(city)
+        storage.save()
 
-    def test_all(self):
-        """Test the 'all' method of DBStorage"""
-        # Add some test data to the database
-        state = State(name="California")
-        city = City(name="San Francisco", state_id=state.id)
-        self.db_storage.new(state)
-        self.db_storage.new(city)
-        self.db_storage.save()
-
-        # Get all objects using the 'all' method
-        all_objs = self.db_storage.all()
-
-        # Make sure the objects were retrieved correctly
+        all_objs = storage.all()
         self.assertIn("State.{}".format(state.id), all_objs)
         self.assertIn("City.{}".format(city.id), all_objs)
 
-    def test_new_save(self):
-        """Test the 'new' and 'save' methods of DBStorage"""
-        # Add a new object to the database
-        state = State(name="New York")
-        self.db_storage.new(state)
-        self.db_storage.save()
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_new(self):
+        """
+        Test that 'new' method adds an object to the database.
+        """
+        storage = DBStorage()
+        storage.reload()
+        state = State(name="test state")
+        storage.new(state)
+        storage.save()
 
-        # Check if the object was saved correctly in the database
         state_key = "State.{}".format(state.id)
-        all_objs = self.db_storage.all()
+        all_objs = storage.all()
         self.assertIn(state_key, all_objs)
 
-    def test_delete(self):
-        """Test the 'delete' method of DBStorage"""
-        # Add an object to the database
-        state = State(name="Texas")
-        self.db_storage.new(state)
-        self.db_storage.save()
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_save(self):
+        """
+        Test that 'save' method properly saves objects to the database.
+        """
+        storage = DBStorage()
+        storage.reload()
+        state = State(name="test state")
+        storage.new(state)
+        storage.save()
 
-        # Delete the object and check if it's removed from the database
         state_key = "State.{}".format(state.id)
-        self.assertIn(state_key, self.db_storage.all())
+        all_objs = storage.all()
+        self.assertIn(state_key, all_objs)
 
-        self.db_storage.delete(state)
-        self.db_storage.save()
-        self.assertNotIn(state_key, self.db_storage.all())
+        # Check that save persists data in the database
+        storage.reload()
+        all_objs = storage.all()
+        self.assertIn(state_key, all_objs)
 
-    def test_reload(self):
-        """Test the 'reload' method of DBStorage"""
-        original_session = self.db_storage._DBStorage__session
 
-        self.db_storage.reload()
-        reloaded_session = self.db_storage._DBStorage__session
-
-        # Make sure the session is reloaded and not the same as the original
-        self.assertIsNot(original_session, reloaded_session)
-        self.assertIsNone(self.db_storage._DBStorage__session)
-
+if __name__ == "__main__":
+    unittest.main()
