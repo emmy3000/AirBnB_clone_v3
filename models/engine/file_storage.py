@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Module containing FileStorage class definition."""
+"""Module containing FileStorage class definition.
+"""
 
 import json
 from models.base_model import BaseModel
@@ -32,11 +33,11 @@ class FileStorage:
         is returned. Otherwise, returns the __objects dictionary.
         """
         if cls:
-            if type(cls) == str:
+            if isinstance(cls, str):
                 cls = eval(cls)
             return {
-                    key: value for key, value in self.__objects.items()
-                    if isinstance(value, cls)}
+                key: value for key, value in self.__objects.items()
+                if isinstance(value, cls)}
 
         return self.__objects
 
@@ -48,9 +49,9 @@ class FileStorage:
     def save(self):
         """Serializes __objects to the JSON file's __file_path."""
         objects_dict = {
-                        key: value.to_dict() for key,
-                        value in self.__objects.items()
-                        }
+            key: value.to_dict() for key,
+            value in self.__objects.items()
+        }
         with open(self.__file_path, "w", encoding="utf-8") as file:
             json.dump(objects_dict, file)
 
@@ -75,3 +76,15 @@ class FileStorage:
     def close(self):
         """Call reload method for deserializing the JSON file to objects."""
         self.reload()
+
+    def get(self, cls, id):
+        """Retrieve an object based on class and ID"""
+        key = "{}.{}".format(cls.__name__, id)
+        return self.all(cls).get(key, None)
+
+    def count(self, cls=None):
+        """Count the number of objects in storage"""
+        if cls:
+            return len([obj for obj in self.all(
+                cls).values() if isinstance(obj, cls)])
+        return len(self.all())
