@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""
-Initialize the models package and create the BaseModel class.
+"""Initialize the models package and create the BaseModel class.
 """
 
 from datetime import datetime
