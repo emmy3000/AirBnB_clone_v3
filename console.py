@@ -13,7 +13,8 @@ Commands:
 
 
 import cmd
-from shlex import split
+import json
+import shlex
 from models import storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -22,6 +23,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+
 
 classes = {
     "Amenity": Amenity,
@@ -60,40 +62,65 @@ class HBNBCommand(cmd.Cmd):
         print("")
         return True
 
-    def do_create(self, line):
+    def do_create(self, args):
         """
-        Create a new instance of a class.
+        Create a new instance of a class and save it to the database.
 
-        Usage: create <class> <key1>=<value1> <key2>=<value2> ...
+        Usage: create <class_name> [param1=value1] [param2=value2] ...
 
-        Creates a new class instance with the given keys and values and prints its id.
+        Examples:
+            - create BaseModel
+            - create User email="test@example.com" password="123456"
+
+        Note:
+            The class_name should be one of the available classes: Amenity, BaseModel,
+            City, Place, Review, State, User.
         """
+        if not args:
+            print("** class name missing **")
+            return
+
         try:
-            if not line:
-                raise SyntaxError("Class name missing")
-
-            args = split(line)
+            args = shlex.split(args)
             class_name = args[0]
             if class_name not in classes:
                 raise NameError("Class doesn't exist")
 
-            kwargs = {}
+            new_instance = classes[class_name]()
+
             for arg in args[1:]:
                 key, value = arg.split("=")
-                value = value.strip('"').replace(
-                    "_", " ") if value[0] == '"' else eval(value)
-                kwargs[key] = value
+                key = key.replace("_", " ")
+                value = value.replace("_", " ")
 
-            obj = classes[class_name](**kwargs)
-            obj.save()
-            print(obj.id)
+                # Check if the value is enclosed in double quotes and remove
+                # them
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1]
 
-        except SyntaxError as e:
-            print("** {} **".format(e))
+                try:
+                    value = eval(value)
+                except NameError:
+                    pass
+
+                setattr(new_instance, key, value)
+
+            # Check and handle the state_id attribute manually if provided
+            if "state_id" in new_instance.__dict__:
+                state_id = new_instance.__dict__["state_id"]
+                if state_id not in [
+                        state.id for state in storage.all(State).values()]:
+                    raise ValueError("State ID doesn't exist")
+
+            new_instance.save()
+            print(new_instance.id)
+
         except NameError as e:
             print("** {} **".format(e))
-        except Exception as e:
+        except ValueError as e:
             print("** {} **".format(e))
+        except Exception as e:
+            print("** {}".format(e))
 
     def do_show(self, line):
         """
@@ -107,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
             if not line:
                 raise SyntaxError("Class name missing")
 
-            args = split(line)
+            args = shlex.split(args)
             class_name = args[0]
             if class_name not in classes:
                 raise NameError("Class doesn't exist")
