@@ -13,7 +13,7 @@ import uuid
 
 time_format = "%Y-%m-%dT%H:%M:%S.%f"
 
-if models.storage_t == "db":
+if models.storage_type == "db":
     Base = declarative_base()
 else:
     Base = object
@@ -27,16 +27,9 @@ class BaseModel:
         id (str): Primary key for the database or a unique identifier.
         created_at (datetime): Date and time of object creation.
         updated_at (datetime): Date and time of last update.
-
-    Methods:
-        __init__(*args, **kwargs): Initializes the base model.
-        __str__(): Returns a string representation of the BaseModel instance.
-        save(): Updates the 'updated_at' attribute with the current datetime.
-        to_dict(): Returns a dictionary containing all keys/values of the instance.
-        delete(): Deletes the current instance from the storage.
     """
 
-    if models.storage_t == "db":
+    if models.storage_type == "db":
         id = Column(String(60), primary_key=True)
         created_at = Column(DateTime, default=datetime.utcnow)
         updated_at = Column(DateTime, default=datetime.utcnow)
@@ -85,8 +78,8 @@ class BaseModel:
         Returns:
             str: The string representation.
         """
-        return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id,
-                                         self.__dict__)
+        return "[{:s}] ({:s}) {}".format(
+            self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
         """
@@ -116,7 +109,7 @@ class BaseModel:
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
 
-        if "password" in new_dict and models.storage_t == "db":
+        if "password" in new_dict and models.storage_type == "db":
             del new_dict["password"]
 
         return new_dict
