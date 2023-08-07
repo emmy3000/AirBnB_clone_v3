@@ -1,4 +1,4 @@
-# AirBnB Clone - The Console
+# AirBnB Clone - The Console and RESTful API
 
 ![HolBnB clone](https://github.com/monoprosito/AirBnB_clone/blob/feature/console/hBnB.png?raw=true)
 Welcome to the AirBnB Clone Project (Holberton B&B edition)!
@@ -135,3 +135,7 @@ Email: etoogueji@gmail.com
 **Frankelly Ozo**  
 *MySQL & SQLAlchemy Integration*  
 Email: chiedoziefrankelly@gmail.com
+
+**Habiba Sangari**
+*RESTful API Implementation*
+Email: habibasangari@gmail.com
