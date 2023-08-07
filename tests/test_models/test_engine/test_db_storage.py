@@ -88,7 +88,7 @@ class TestDBStorage(unittest.TestCase):
     """
     Test cases for the DBStorage class functionality.
     """
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @unittest.skipIf(models.storage_type != 'db', "not testing db storage")
     def test_get(self):
         """
         Test that 'get' method returns an object with a given id.
@@ -100,7 +100,7 @@ class TestDBStorage(unittest.TestCase):
         obj = storage.get(State, state.id)
         self.assertEqual(state, obj)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @unittest.skipIf(models.storage_type != 'db', "not testing db storage")
     def test_count(self):
         """
         Test that 'count' method returns the correct number of objects.
@@ -114,14 +114,14 @@ class TestDBStorage(unittest.TestCase):
         all_count = storage.count()
         self.assertGreaterEqual(all_count, 1)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @unittest.skipIf(models.storage_type != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """
         Test that 'all' method returns a dictionary.
         """
         self.assertIs(type(models.storage.all()), dict)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @unittest.skipIf(models.storage_type != 'db', "not testing db storage")
     def test_all_no_class(self):
         """
         Test that 'all' method returns all rows when no class is passed.
@@ -138,7 +138,7 @@ class TestDBStorage(unittest.TestCase):
         self.assertIn("State.{}".format(state.id), all_objs)
         self.assertIn("City.{}".format(city.id), all_objs)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @unittest.skipIf(models.storage_type != 'db', "not testing db storage")
     def test_new(self):
         """
         Test that 'new' method adds an object to the database.
@@ -153,7 +153,7 @@ class TestDBStorage(unittest.TestCase):
         all_objs = storage.all()
         self.assertIn(state_key, all_objs)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @unittest.skipIf(models.storage_type != 'db', "not testing db storage")
     def test_save(self):
         """
         Test that 'save' method properly saves objects to the database.
