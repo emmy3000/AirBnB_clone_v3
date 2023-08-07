@@ -7,7 +7,7 @@ This module contains API endpoints for handling Amenities of Places.
 
 from api.v1.views import app_views
 from flask import jsonify, abort
-from models import storage, storage_t
+from models import storage, storage_type
 from models.amenity import Amenity
 from models.place import Place
 
@@ -55,7 +55,7 @@ def delete_place_amenity(place_id, amenity_id):
     if not amenity:
         abort(404)
 
-    if storage_t == 'db':
+    if storage_type == 'db':
         found_amenities = list(
             filter(
                 lambda d: d.id == amenity_id,
@@ -69,7 +69,7 @@ def delete_place_amenity(place_id, amenity_id):
     if not found_amenities:
         abort(404)
 
-    if storage_t == 'db':
+    if storage_type == 'db':
         place.amenities.remove(amenity)
     else:
         place.amenity_ids.remove(amenity_id)
@@ -99,7 +99,7 @@ def link_amenity_place(place_id, amenity_id):
     if not amenity:
         abort(404)
 
-    if storage_t == 'db':
+    if storage_type == 'db':
         found_amenities = list(
             filter(
                 lambda d: d.id == amenity_id,
@@ -113,7 +113,7 @@ def link_amenity_place(place_id, amenity_id):
     if len(found_amenities) == 1:
         return jsonify(amenity.to_dict()), 200
 
-    if storage_t == 'db':
+    if storage_type == 'db':
         place.amenities.append(amenity)
     else:
         place.amenity_ids.append(amenity_id)
