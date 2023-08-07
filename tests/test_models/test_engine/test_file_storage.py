@@ -86,7 +86,7 @@ class TestFileStorage(unittest.TestCase):
     """
     Test cases for the FileStorage class.
     """
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_type == 'db', "not testing file storage")
     def test_all_returns_dict(self):
         """
         Test that the 'all' method returns the FileStorage.__objects attribute.
@@ -97,7 +97,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(type(obj), dict)
         self.assertIs(obj, storage._FileStorage__objects)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_type == 'db', "not testing file storage")
     def test_new(self):
         """
         Test that the 'new' method adds an object to the FileStorage.__objects attribute.
@@ -111,7 +111,7 @@ class TestFileStorage(unittest.TestCase):
         key = user.__class__.__name__ + "." + str(user.id)
         self.assertIsNotNone(obj[key])
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_type == 'db', "not testing file storage")
     def test_save(self):
         """
         Test that the 'save' method properly saves objects to file.json.
@@ -129,7 +129,7 @@ class TestFileStorage(unittest.TestCase):
             data = json.load(f)
         self.assertIn(key, data)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_type == 'db', "not testing file storage")
     def test_get(self):
         """
         Test that the 'get' method returns an object with a given id.
@@ -145,7 +145,7 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(instance, obj)
                 self.assertEqual(not_exists, None)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_type == 'db', "not testing file storage")
     def test_count(self):
         """
         Test that the 'count' method returns the number of objects in storage.
