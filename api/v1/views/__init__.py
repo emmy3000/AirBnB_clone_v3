@@ -14,7 +14,11 @@ Routes:
     - /api/v1/users
     - /api/v1/places_amenities
 """
-# Import views to register their routes with the Blueprint
+from flask import Blueprint
+
+app_views = Blueprint("app_views", __name__, url_prefix="/api/v1")
+
+# Import views after app_views is defined
 from api.v1.views.places_amenities import *
 from api.v1.views.users import *
 from api.v1.views.amenities import *
@@ -23,7 +27,3 @@ from api.v1.views.places import *
 from api.v1.views.cities import *
 from api.v1.views.states import *
 from api.v1.views.index import *
-from flask import Blueprint
-
-# Create a Blueprint object for 'app_views' with a URL prefix '/api/v1'
-app_views = Blueprint("app_views", __name__, url_prefix="/api/v1")
